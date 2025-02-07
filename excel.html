@@ -55,7 +55,7 @@
 
         .page {
             position: relative;
-            width: 40%; /* Default page size */
+            width: 55%; /* Default page size */
             height: 100%;
             background: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -97,7 +97,7 @@
 
         #nav-buttons {
             position: absolute;
-            top: 50%;
+            top: 55%;
             width: 100%;
             display: flex;
             justify-content: space-between;
@@ -124,7 +124,7 @@
     <div id="settings">
         <label>
             Page Width (%):
-            <input type="range" id="page-width" min="40" max="80" value="48">
+            <input type="range" id="page-width" min="40" max="90" value="48">
         </label>
         <label>
             Container Width (px):
@@ -190,7 +190,7 @@
             }
 
             pdf.getPage(pageNumber).then(page => {
-                const scale = 2.0; // Scale to fit the container
+                const scale = 2.1; // Scale to fit the container
                 const viewport = page.getViewport({ scale: scale });
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
