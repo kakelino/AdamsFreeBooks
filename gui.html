@@ -190,7 +190,7 @@
             }
 
             pdf.getPage(pageNumber).then(page => {
-                const scale = 0.95; // Scale to fit the container
+                const scale = 1.1; // Scale to fit the container
                 const viewport = page.getViewport({ scale: scale });
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
