@@ -55,7 +55,7 @@
 
         .page {
             position: relative;
-            width: 48%; /* Default page size */
+            width: 78%; /* Default page size */
             height: 100%;
             background: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -190,7 +190,7 @@
             }
 
             pdf.getPage(pageNumber).then(page => {
-                const scale = 1.2; // Scale to fit the container
+                const scale = 0.85; // Scale to fit the container
                 const viewport = page.getViewport({ scale: scale });
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
