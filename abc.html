@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Book Flip</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #808080;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #settings {
+            margin: 10px 0;
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        #pdf-container {
+            position: relative;
+            width: 1600px;
+            height: 1080px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            background: #ddd;
+            border-radius: 10px;
+            transition: background-color 0.5s;
+        }
+
+        .page {
+            position: relative;
+            width: 48%;
+            height: 100%;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        #nav-buttons {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+
+        .nav-button {
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="settings">
+        <label>
+            Scale:
+            <input type="range" id="scale-range" min="1" max="3" step="0.1" value="2.1">
+        </label>
+    </div>
+
+    <div id="pdf-container">
+        <div id="nav-buttons">
+            <button class="nav-button" onclick="previousPage()">Previous</button>
+            <button class="nav-button" onclick="nextPage()">Next</button>
+        </div>
+        <div id="page-left" class="page"></div>
+        <div id="page-right" class="page"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        const url = 'path/to/your.pdf';
+        let pdf = null;
+        let currentPage = 1;
+        let scale = 2.1;
+
+        const pageLeft = document.getElementById('page-left');
+        const pageRight = document.getElementById('page-right');
+        const scaleRange = document.getElementById('scale-range');
+
+        pdfjsLib.getDocument(url).promise.then(loadedPdf => {
+            pdf = loadedPdf;
+            renderPages(currentPage);
+        });
+
+        function renderPages(startPage) {
+            renderPage(startPage, pageLeft);
+            renderPage(startPage + 1, pageRight);
+        }
+
+        function renderPage(pageNumber, container) {
+            if (pageNumber > pdf.numPages || pageNumber < 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            pdf.getPage(pageNumber).then(page => {
+                const viewport = page.getViewport({ scale });
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                container.innerHTML = '';
+                container.appendChild(canvas);
+
+                page.render({ canvasContext: context, viewport });
+            });
+        }
+
+        function nextPage() {
+            if (currentPage + 2 <= pdf.numPages) {
+                currentPage += 2;
+                renderPages(currentPage);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage - 2 >= 1) {
+                currentPage -= 2;
+                renderPages(currentPage);
+            }
+        }
+
+        scaleRange.addEventListener('input', () => {
+            scale = parseFloat(scaleRange.value);
+            renderPages(currentPage);
+        });
+    </script>
+</body>
+</html>
