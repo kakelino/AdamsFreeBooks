@@ -38,7 +38,7 @@
             justify-content: center;
             background: #ddd;
             border-radius: 10px;
-            transition: background-color 0.5s;
+            transition: background-color 0.5s, width 0.5s, height 0.5s;
         }
 
         .page {
@@ -49,6 +49,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             border-radius: 5px;
+            transition: width 0.5s;
         }
 
         #nav-buttons {
@@ -111,14 +112,19 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script>
-        const url = 'ebook_gui_1.pdf';
+        const url = 'path/to/your.pdf';
         let pdf = null;
         let currentPage = 1;
         let scale = 2.1;
 
         const pageLeft = document.getElementById('page-left');
         const pageRight = document.getElementById('page-right');
+        const pdfContainer = document.getElementById('pdf-container');
         const scaleRange = document.getElementById('scale-range');
+        const pageWidthInput = document.getElementById('page-width');
+        const containerWidthInput = document.getElementById('container-width');
+        const containerHeightInput = document.getElementById('container-height');
+        const backgroundColorInput = document.getElementById('background-color');
 
         pdfjsLib.getDocument(url).promise.then(loadedPdf => {
             pdf = loadedPdf;
@@ -167,6 +173,24 @@
         scaleRange.addEventListener('input', () => {
             scale = parseFloat(scaleRange.value);
             renderPages(currentPage);
+        });
+
+        pageWidthInput.addEventListener('input', () => {
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.width = pageWidthInput.value + '%';
+            });
+        });
+
+        containerWidthInput.addEventListener('input', () => {
+            pdfContainer.style.width = containerWidthInput.value + 'px';
+        });
+
+        containerHeightInput.addEventListener('input', () => {
+            pdfContainer.style.height = containerHeightInput.value + 'px';
+        });
+
+        backgroundColorInput.addEventListener('input', () => {
+            pdfContainer.style.backgroundColor = backgroundColorInput.value;
         });
     </script>
 </body>
