@@ -3,195 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Book Flip</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #808080;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
-            overflow: hidden;
-        }
+    <title>Interactive eBooks Flipped</title>
 
-        #settings {
-            margin: 10px 0;
-            background: #f9f9f9;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+<style>
+p {
+  font-size: 20px;
+  margin-left: 120px;
+}
+h2 {
+  font-size: 24px;
 
-        #pdf-container {
-            position: relative;
-            width: 1600px;
-            height: 1080px;
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            background: #ddd;
-            border-radius: 10px;
-            transition: background-color 0.5s, width 0.5s, height 0.5s;
-        }
-
-        .page {
-            position: relative;
-            width: 48%;
-            height: 100%;
-            background: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            border-radius: 5px;
-            transition: width 0.5s;
-        }
-
-        #nav-buttons {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-            z-index: 2;
-        }
-
-        .nav-button {
-            background-color: #333;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+}
+	
+</style>	
 </head>
+	
 <body>
-    <div id="settings">
-        <label>
-            Page Width (%):
-            <input type="range" id="page-width" min="40" max="80" value="48">
-        </label>
-        <label>
-            Container Width (px):
-            <input type="number" id="container-width" value="1600">
-        </label>
-        <label>
-            Container Height (px):
-            <input type="number" id="container-height" value="1080">
-        </label>
-        <label>
-            Background Color:
-            <input type="color" id="background-color" value="#dddddd">
-        </label>
-        <label>
-            Flip Speed (seconds):
-            <input type="number" step="0.1" id="flip-speed" value="1.5">
-        </label>
-        <label>
-            Scale:
-            <input type="range" id="scale-range" min="1" max="3" step="0.1" value="2.1">
-        </label>
-    </div>
 
-    <div id="pdf-container">
-        <div id="nav-buttons">
-            <button class="nav-button" onclick="previousPage()">Previous</button>
-            <button class="nav-button" onclick="nextPage()">Next</button>
-        </div>
-        <div id="page-left" class="page"></div>
-        <div id="page-right" class="page"></div>
-    </div>
+<h1>Free ebooks here</h1>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script>
-        const url = 'ebook_gui_1.pdf';
-        let pdf = null;
-        let currentPage = 1;
-        let scale = 2.1;
 
-        const pageLeft = document.getElementById('page-left');
-        const pageRight = document.getElementById('page-right');
-        const pdfContainer = document.getElementById('pdf-container');
-        const scaleRange = document.getElementById('scale-range');
-        const pageWidthInput = document.getElementById('page-width');
-        const containerWidthInput = document.getElementById('container-width');
-        const containerHeightInput = document.getElementById('container-height');
-        const backgroundColorInput = document.getElementById('background-color');
+<h2>These are not final versions, comments are welcome</h2>
 
-        pdfjsLib.getDocument(url).promise.then(loadedPdf => {
-            pdf = loadedPdf;
-            renderPages(currentPage);
-        });
+		<p>
+Unity books: <br>
+<a href = "../flip20/flip10.html">Unity part 1</a>  <br>
+<a href = "../flip30/flip10.html">Unity part 2</a>  <br>
 
-        function renderPages(startPage) {
-            renderPage(startPage, pageLeft);
-            renderPage(startPage + 1, pageRight);
-        }
 
-        function renderPage(pageNumber, container) {
-            if (pageNumber > pdf.numPages || pageNumber < 1) {
-                container.innerHTML = '';
-                return;
-            }
+	<p>
+Python books: <br>
+<a href = "book1.html">Python 1</a>  <br>
+<a href = "book2.html">Python 2</a>  <br>
+<a href = "book3.html">Python 3</a>  <br>
 
-            pdf.getPage(pageNumber).then(page => {
-                const viewport = page.getViewport({ scale });
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
+<br>
+Basic coding books: <br>
+<a href = "java.html">Java</a>  <br>
+<a href = "js.html">JavaScript</a>  <br>
+<a href = "c.html">C programming</a>  <br>
+<a href = "php.html">PHP examples</a>  <br>
+<a href = "coding_tips.html">Coding hints</a>  <br>
 
-                container.innerHTML = '';
-                container.appendChild(canvas);
+<br>
+Special app development books: <br>
+<a href = "algoes.html">algorithms 1</a>  <br>
+<a href = "algoes2.html">algorithms 2</a>  <br>
+<a href = "OOP_part1.html">OOP 1</a>  <br>
+<a href = "OOP_part2.html">OOP 2</a>  <br>
+<a href = "uml.html">UML</a>  <br>
+<a href = "gui.html">GUI</a>  <br>
+<a href = "excel.html">Excel 1</a>  <br>
+<a href = "cv.html">Computer Vision Samples</a>  <br>
 
-                page.render({ canvasContext: context, viewport });
-            });
-        }
 
-        function nextPage() {
-            if (currentPage + 2 <= pdf.numPages) {
-                currentPage += 2;
-                renderPages(currentPage);
-            }
-        }
 
-        function previousPage() {
-            if (currentPage - 2 >= 1) {
-                currentPage -= 2;
-                renderPages(currentPage);
-            }
-        }
+	</p>
 
-        scaleRange.addEventListener('input', () => {
-            scale = parseFloat(scaleRange.value);
-            renderPages(currentPage);
-        });
-
-        pageWidthInput.addEventListener('input', () => {
-            document.querySelectorAll('.page').forEach(page => {
-                page.style.width = pageWidthInput.value + '%';
-            });
-        });
-
-        containerWidthInput.addEventListener('input', () => {
-            pdfContainer.style.width = containerWidthInput.value + 'px';
-        });
-
-        containerHeightInput.addEventListener('input', () => {
-            pdfContainer.style.height = containerHeightInput.value + 'px';
-        });
-
-        backgroundColorInput.addEventListener('input', () => {
-            pdfContainer.style.backgroundColor = backgroundColorInput.value;
-        });
-    </script>
 </body>
 </html>
+
+
+	
+	
+	
+	
