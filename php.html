@@ -51,6 +51,7 @@
 
         .scale-controls {
             margin-top: 10px;
+			font-size: 14px;
         }
 
         .scale-controls label {
@@ -60,8 +61,11 @@
     </style>
 </head>
 <body>
-    <h1>PDF Page Flipper</h1>
-
+<div class="scale-controls">
+            <label for="scale">Scale:</label>
+            <input type="number" id="scale" max = "2.1" min = "0.1" value="1.2" step="0.1" >
+            <button id="applyScale">Apply Scale</button>
+        </div>
     <div class="pdf-viewer-container">
         <div class="buttons-container">
             <button id="prevPage" disabled>Previous</button>
@@ -71,11 +75,7 @@
 
         <div class="pdf-container" id="pdfContainer"></div>
 
-        <div class="scale-controls">
-            <label for="scale">Scale:</label>
-            <input type="number" id="scale" value="1.5" step="0.1">
-            <button id="applyScale">Apply Scale</button>
-        </div>
+        
     </div>
 
     <script>
