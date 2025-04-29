@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Page Flipper</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        .pdf-viewer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pdf-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            overflow: hidden; /* Prevent horizontal scrollbar */
+        }
+
+        .page {
+            position: relative; /* Changed from absolute */
+            opacity: 0;
+            transition: opacity 0.3s;
+            border: 1px solid black;
+            margin: 5px;
+        }
+
+        .page.visible { opacity: 1; transform: translateX(0); }
+        .page canvas { display: block; }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between; /* Place buttons on sides */
+            width: 100%;
+            max-width: 800px; /* Adjust as needed */
+            margin-top: 10px;
+            align-items: center;
+        }
+
+        .buttons-container button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .buttons-container button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .scale-controls {
+            margin-top: 10px;
+			font-size: 14px;
+        }
+
+        .scale-controls label {
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="scale-controls">
+            <label for="scale">Scale:</label>
+            <input type="number" id="scale" max = "2.1" min = "0.1" value="1.2" step="0.1" >
+            <button id="applyScale">Apply Scale</button>
+        </div>
+    <div class="pdf-viewer-container">
+        <div class="buttons-container">
+            <button id="prevPage" disabled>Previous</button>
+            <span></span> <!-- Spacer for centering -->
+            <button id="nextPage">Next</button>
+        </div>
+
+        <div class="pdf-container" id="pdfContainer"></div>
+
+        
+    </div>
+
+    <script>
+        const url = 'harry_hedgehog_1.pdf'; // Replace with your actual PDF URL
+        let pdfDoc = null, currentPage = 1, numPages = 0, currentScale = 1.5;
+        const pdfContainer = document.getElementById('pdfContainer');
+        const prevPageBtn = document.getElementById('prevPage');
+        const nextPageBtn = document.getElementById('nextPage');
+        const scaleInput = document.getElementById('scale');
+        const applyScaleBtn = document.getElementById('applyScale');
+
+        // Function to disable/enable navigation buttons
+        function updateButtons() {
+            prevPageBtn.disabled = (currentPage <= 1);
+            nextPageBtn.disabled = (currentPage >= numPages -1 && numPages > 2 ) || (currentPage >= numPages && numPages <=2) ; // Disable "Next" on the last page
+        }
+
+        pdfjsLib.getDocument(url).promise.then(pdf => {
+            pdfDoc = pdf;
+            numPages = pdf.numPages;
+            renderPages(); // Initial render
+            updateButtons();
+        });
+
+        function renderPages() {
+            pdfContainer.innerHTML = ''; // Clear existing content
+            let pagesToShow = (currentPage === 1 || currentPage >= numPages -1) ? 1 : 2;
+            let pages = [];
+
+            for (let i = 0; i < pagesToShow; i++) {
+                if (currentPage + i > numPages) break;
+                const canvas = document.createElement('canvas');
+                canvas.classList.add('page');
+                pdfContainer.appendChild(canvas);
+                pages.push({ canvas, pageNum: currentPage + i });
+            }
+
+            pages.forEach((p, index) => {
+                pdfDoc.getPage(p.pageNum).then(page => {
+                    const context = p.canvas.getContext('2d');
+                    const viewport = page.getViewport({ scale: currentScale }); // Use currentScale
+                    p.canvas.width = viewport.width;
+                    p.canvas.height = viewport.height;
+
+                    const renderTask = page.render({ canvasContext: context, viewport: viewport });
+                    renderTask.promise.then(() => {
+                        setTimeout(() => p.canvas.classList.add('visible'), index * 100); // Staggered appearance
+                    });
+                });
+            });
+        }
+
+        nextPageBtn.addEventListener('click', () => {
+            if (currentPage < numPages) {
+                currentPage = (currentPage === 1) ? 2 : currentPage + 2;
+                renderPages();
+                updateButtons();
+            }
+        });
+
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage = (currentPage === 2) ? 1 : currentPage - 2;
+                renderPages();
+                updateButtons();
+            }
+        });
+
+        applyScaleBtn.addEventListener('click', () => {
+            const newScale = parseFloat(scaleInput.value);
+            if (!isNaN(newScale) && newScale > 0) {
+                currentScale = newScale;
+                renderPages(); // Re-render with new scale
+            } else {
+                alert("Please enter a valid scale value.");
+            }
+        });
+
+    </script>
+</body>
+</html>
